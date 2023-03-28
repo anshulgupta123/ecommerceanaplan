@@ -40,7 +40,7 @@ public class OrderProcessingSaga {
         log.info("OrderCreatedEvent in Saga for Order Id : {}",
                 event.getOrderId());
         GetUserPaymentDetailsQuery getUserPaymentDetailsQuery
-                = new GetUserPaymentDetailsQuery(event.getUserId());
+                = new GetUserPaymentDetailsQuery(String.valueOf(event.getUserId()));
         User user = null;
         try {
             user = queryGateway.query(
@@ -54,15 +54,14 @@ public class OrderProcessingSaga {
             //Start the Compensating transaction
            cancelOrderCommand(event.getOrderId());
         }
-
         ValidatePaymentCommand validatePaymentCommand
                 = ValidatePaymentCommand
                 .builder()
-                .cardDetails(user.getCardDetails())
                 .orderId(event.getOrderId())
                 .paymentId(UUID.randomUUID().toString())
+                .payableAmount(event.getTotalAmount())
+                .paymentMode("CASH")
                 .build();
-
         commandGateway.sendAndWait(validatePaymentCommand);
     }
 

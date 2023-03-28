@@ -1,35 +1,21 @@
 package com.example.orderservice.modal;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
+@Data
 public class OrderRestModel {
-    private String productId;
-    private String userId;
-    private String addressId;
-    private Integer quantity;
+    private String orderId;
+    private Double totalAmount;
+    private Long userId;
+    private String orderStatus;
+    private Long createdOn;
+    private Long modifiedOn;
 
-    public OrderRestModel() {
-    }
-
-    public OrderRestModel(String productId, String userId, String addressId, Integer quantity) {
-        this.productId = productId;
-        this.userId = userId;
-        this.addressId = addressId;
-        this.quantity = quantity;
-    }
-
-
-    @Override
-    public String toString() {
-        return "OrderRestModel{" +
-                "productId='" + productId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", addressId='" + addressId + '\'' +
-                ", quantity=" + quantity +
-                '}';
-    }
 }
 

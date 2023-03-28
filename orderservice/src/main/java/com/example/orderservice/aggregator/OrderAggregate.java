@@ -14,17 +14,18 @@ import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 
+import java.sql.Timestamp;
+
 @Aggregate
 public class OrderAggregate {
 
     @AggregateIdentifier
     private String orderId;
-    private String productId;
-    private String userId;
-    private String addressId;
-    private Integer quantity;
+    private Double totalAmount;
+    private Long userId;
     private String orderStatus;
-
+    private Long createdOn;
+    private Long modifiedOn;
     public OrderAggregate() {
     }
 
@@ -43,9 +44,9 @@ public class OrderAggregate {
         this.orderStatus = event.getOrderStatus();
         this.userId = event.getUserId();
         this.orderId = event.getOrderId();
-        this.quantity = event.getQuantity();
-        this.productId = event.getProductId();
-        this.addressId = event.getAddressId();
+        this.modifiedOn=event.getModifiedOn();
+        this.createdOn=event.getCreatedOn();
+        this.totalAmount=event.getTotalAmount();
     }
 
     @CommandHandler

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @RestController
@@ -30,9 +31,10 @@ public class OrderCommandController {
         CreateOrderCommand createOrderCommand
                 = CreateOrderCommand.builder()
                 .orderId(orderId)
-                .addressId(orderRestModel.getAddressId())
-                .productId(orderRestModel.getProductId())
-                .quantity(orderRestModel.getQuantity())
+                .createdOn(new Timestamp(System.currentTimeMillis()))
+                .modifiedOn(new Timestamp(System.currentTimeMillis()))
+                .userId(orderRestModel.getUserId())
+                .totalAmount(orderRestModel.getTotalAmount())
                 .orderStatus("CREATED")
                 .build();
         commandGateway.sendAndWait(createOrderCommand);

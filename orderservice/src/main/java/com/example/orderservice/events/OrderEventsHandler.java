@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+
 @Component
 public class OrderEventsHandler {
 
@@ -21,6 +23,8 @@ public class OrderEventsHandler {
     @EventHandler
     public void on(OrderCreatedEvent event) {
         Order order = new Order();
+        order.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+        order.setModifiedOn(new Timestamp(System.currentTimeMillis()));
         BeanUtils.copyProperties(event, order);
         orderRepository.save(order);
     }
