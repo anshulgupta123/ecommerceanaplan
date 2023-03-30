@@ -3,6 +3,7 @@ package com.example.orderservice.saga;
 import com.example.commonservicesaga.commands.*;
 import com.example.commonservicesaga.event.*;
 import com.example.commonservicesaga.modals.User;
+import com.example.commonservicesaga.modals.UserDto;
 import com.example.commonservicesaga.query.GetUserPaymentDetailsQuery;
 import com.example.orderservice.events.OrderCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -41,11 +42,11 @@ public class OrderProcessingSaga {
                 event.getOrderId());
         GetUserPaymentDetailsQuery getUserPaymentDetailsQuery
                 = new GetUserPaymentDetailsQuery(String.valueOf(event.getUserId()));
-        User user = null;
+        UserDto user = null;
         try {
             user = queryGateway.query(
                     getUserPaymentDetailsQuery,
-                    ResponseTypes.instanceOf(User.class)
+                    ResponseTypes.instanceOf(UserDto.class)
             ).join();
 
         } catch (Exception e) {
