@@ -42,6 +42,7 @@ public class OrderProcessingSaga {
                 event.getOrderId());
         GetUserPaymentDetailsQuery getUserPaymentDetailsQuery
                 = new GetUserPaymentDetailsQuery(String.valueOf(event.getUserId()));
+        boolean flag=false;
         UserDto user = null;
         try {
             user = queryGateway.query(
@@ -50,20 +51,23 @@ public class OrderProcessingSaga {
             ).join();
 
         } catch (Exception e) {
+            flag=true;
             log.error("Error in OrderCreatedEvent");
             log.error(e.getMessage());
             //Start the Compensating transaction
            cancelOrderCommand(event.getOrderId());
         }
-        ValidatePaymentCommand validatePaymentCommand
-                = ValidatePaymentCommand
-                .builder()
-                .orderId(event.getOrderId())
-                .paymentId(UUID.randomUUID().toString())
-                .payableAmount(event.getTotalAmount())
-                .paymentMode("CASH")
-                .build();
-        commandGateway.sendAndWait(validatePaymentCommand);
+        if(!flag) {
+            ValidatePaymentCommand validatePaymentCommand
+                    = ValidatePaymentCommand
+                    .builder()
+                    .orderId(event.getOrderId())
+                    .paymentId(UUID.randomUUID().toString())
+                    .payableAmount(event.getTotalAmount())
+                    .paymentMode("CASH")
+                    .build();
+            commandGateway.sendAndWait(validatePaymentCommand);
+        }
     }
 
     private void cancelOrderCommand(String orderId) {
